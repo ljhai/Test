@@ -1,0 +1,224 @@
+-Dmaven.multiModuleProjectDirectory=$M2_HOME
+ 
+ <tx:advice id="txAdvice" transaction-manager="transactionManager">
+         <tx:attributes>
+             <tx:method name="get*" read-only="true" /><!--以get开头的方法中的Connection是readonly的 -->
+             <tx:method name="update*" rollback-for="Throwable"/><!-- 在update开头的方法中遇到异常（Throwable）就回滚-->
+             <tx:method name="*" />
+         </tx:attributes>
+     </tx:advice>
+     <aop:config>
+         <aop:pointcut expression="execution(* com.test.Test2.*(..))"<!-- 匹配com.test.Test2这个类下面的所有方法-->
+             id="service" />
+         <aop:advisor advice-ref="txAdvice" pointcut-ref="service" />
+     </aop:config>
+
+原来主动权在自己手上，自己要使用“UserServiceImpl”类的实例，自己主动去new一个出来马上就可以使用了，但现在自己不能主动去new“UserServiceImpl”类的实例，
+new“UserServiceImpl”类的实例的权力已经被Spring拿走了，只有Spring才能够new“UserServiceImpl”类的实例，而Action只能等Spring创建好“UserServiceImpl”类的实例后
+，再“恳求”Spring把创建好的“UserServiceImpl”类的实例给他，这样他才能够使用“UserServiceImpl”，这就是Spring核心思想“控制反转”，也叫“依赖注入”，“依赖注入”也很好理解
+，Action需要使用UserServiceImpl干活，那么就是对UserServiceImpl产生了依赖，Spring把Acion需要依赖的UserServiceImpl注入(也就是“给”)给Action，这就是所谓的“依赖注入”。
+
+@NoRepositoryBean一定要有的，还有全局的扩展实现类不要用Imp作为后缀名，不然会报异常的
+如果要为UserDao扩展方法(而不是接口)，要新增一个UserDaoCustom接口，这时候，实现类的名字必须是UserDaoImpl，而不是UserDaoCustomImpl。
+
+
+
+注解@ Deprecated，用来表示某个类的属性或方法已经过时，不想别人再用时，在属性和方法上用@ Deprecated修饰，
+
+A：<s:a xhref=""></s:a>-----超链接，类似于html里的<a></a>
+<s:action name=""></s:action>-----执行一个view里面的一个action
+<s:actionerror/>-----如果action的errors有值那么显示出来<s:actionmessage/>-----如果action的message有值那么显示出来
+<s:append></s:append>-----添加一个值到list，类似于list.add();
+<s:autocompleter></s:autocompleter>-----自动完成<s:combobox>标签的内容，这个是ajax
+B：<s:bean name=""></s:bean>-----类似于struts1.x中的，JavaBean的值
+C：
+<s:checkbox></s:checkbox>-----复选框<s:checkboxlist list=""></s:checkboxlist>-----多选框
+<s:combobox list=""></s:combobox>-----下拉框<s:component></s:component>-----图像符号
+D：<s:date/>-----获取日期格式<s:datetimepicker></s:datetimepicker>-----日期输入框
+<s:debug></s:debug>-----显示错误信息<s:div></s:div>-----表示一个块，类似于html的<div></div><s:doubleselect list="" doubleName="" doubleList=""></s:doubleselect>-----双下拉框
+E：<s:if test=""></s:if><s:elseif test=""></s:elseif><s:else></s:else>-----这3个标签一起使用，表示条件判断
+F：<s:fielderror></s:fielderror>-----显示文件错误信息<s:file></s:file>-----文件上传<s:form action=""></s:form>-----获取相应form的值
+G：<s:generator separator="" val=""></s:generator>----和<s:iterator>标签一起使用
+H：<s:head/>-----在<head></head>里使用，表示头文件结束<s:hidden></s:hidden>-----隐藏值
+I：<s:i18n name=""></s:i18n>-----加载资源包到值堆栈<s:include value=""></s:include>-----包含一个输出，servlet或jsp页面
+<s:inputtransferselect list=""></s:inputtransferselect>-----获取form的一个输入<s:iterator></s:iterator>-----用于遍历集合
+L：<s:label></s:label>-----只读的标签
+M：<s:merge></s:merge>-----合并遍历集合出来的值
+O：<s:optgroup></s:optgroup>-----获取标签组
+<s:optiontransferselect doubleList="" list="" doubleName=""></s:optiontransferselect>-----左右选择框
+P：<s:param></s:param>-----为其他标签提供参数
+<s:password></s:password>-----密码输入框<s:property/>-----得到'value'的属性<s:push value=""></s:push>-----value的值push到栈中,从而使property标签的能够获取value的属性
+R：<s:radio list=""></s:radio>-----单选按钮<s:reset></s:reset>-----重置按钮
+S：<s:select list=""></s:select>-----单选框<s:set name=""></s:set>-----赋予变量一个特定范围内的值
+<s:sort comparator=""></s:sort>-----通过属性给list分类<s:submit></s:submit>-----提交按钮<s:subset></s:subset>-----为遍历集合输出子集
+T：<s:tabbedPanel id=""></s:tabbedPanel>-----
+表格框<s:table></s:table>-----表格<s:text name=""></s:text>-----I18n文本信息<s:textarea></s:textarea>-----文本域输入框<s:textfield></s:textfield>-----文本输入框
+<s:token></s:token>-----拦截器<s:tree></s:tree>-----树<s:treenode label=""></s:treenode>-----树的结构
+U：<s:updownselect list=""></s:updownselect>-----多选择框<s:url></s:url>-----
+创建url
+1.Calendar 转化 String
+Calendar calendat = Calendar.getInstance();
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+String dateStr = sdf.format(calendar.getTime());
+ 
+2.String 转化Calendar
+String str="2012-5-27";
+SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+Date date =sdf.parse(str);
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(date);
+ 
+3.Date 转化String
+SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+String dateStr=sdf.format(new Date());
+ 
+4.String 转化Date
+String str="2012-5-27";
+SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+Date date= sdf.parse(str);
+ 
+5.Date 转化Calendar
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(new java.util.Date());
+ 
+6.Calendar转化Date
+Calendar calendar = Calendar.getInstance();
+java.util.Date date =calendar.getTime();
+ 
+7.String 转成 Timestamp
+Timestamp ts = Timestamp.valueOf("2012-1-14 08:11:00");
+ 
+8.Date 转 TimeStamp
+SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+String time = df.format(new Date());
+Timestamp ts = Timestamp.valueOf(time);
+
+--------视图
+create or replace view V_Asset_Contract as
+select  
+rownum  as id,
+a.code,--资产编号
+a.zcmc,--资产名称
+a.zcdz,--资产地址
+b.contractcode,--合同编号
+b.name,--合同名称
+b.enddate--合同结束日期
+ from asset_basic_info a, asset_contract b where a.code in 
+(select c.assetcode from asset_subject_asset c where c.subjectcode = b.subjectcode) ;
+
+---------------2016/1/11
+select ceil((To_date('2008-05-02 00:00:00' , 'yyyy-mm-dd hh24-mi-ss') - To_date('2008-04-30 23:59:59' , 'yyyy-mm-dd hh24-mi-ss')))  相差天数 FROM DUAL; 
+
+select (EXTRACT(year FROM to_date('2009-05-01','yyyy-mm-dd')) - EXTRACT(year FROM to_date('2008-04-30','yyyy-mm-dd'))) * 12 + 
+       EXTRACT(month FROM to_date('2009-05-01','yyyy-mm-dd')) - EXTRACT(month FROM to_date('2008-04-30','yyyy-mm-dd')) months 
+from dual; 
+to_char(                        ,'yyyy-mm-dd hh24:mi...
+
+$('#tb td[id]').css('width','1000px')或者$('#tb td[id=tds]').css('width','1000px')
+
+HttpServletResponse response = ServletActionContext.getResponse();
+response.getWriter().write(content);
+response.getWriter().flush();
+
+oracle sql 
+【1】大小写转换 UPPER 和 LOWER  SQL> SELECT UPPER('smith') FROM dual; 【2】将雇员姓名变为开头字母大写，INITCAP SQL> SELECT INITCAP(ename) FROM emp;
+字符串截取：substr() 字符串长度：length() 内容替换：replace()  SQL> SELECT  substr('hello',1,3),length('hello'),replace('hello','l','x') FROM dual; 
+
+2016/1/12
+Oracle提供了以下的日期函数支持： 
+MONTHS_BETWEEN():求出给定日期范围的月数  ADD_MONTHS():在指定日期上加上指定的月数，求出之后的日期 NEXT_DAY():下一个的今天的日期  LAST_DAY():求出给定日期的最后一天日期 
+1、TO_CHAR()：  将日期或数值转换成字符串 2、TO_NUMBER()：将字符串转换成数字 3、TO_DATE()：  将字符串转换成日期
+NVL可以理解为将NULL值转换为具体的内容，这里是0
+【2】DECODE()函数，该函数类似于 IF ... ELSEIF...ELSE 语法如下：  DECODE(col/expression,选择1,结果1[，选择2，结果2，...,默认])
+验证DECODE()函数  SQL> SELECT empno,ename,hiredate,  DECODE(job,'CLERK','业务员','SALESMAN','销售人员 ',’MANAGER','经理','ANALYST','分析员','PRESIDENT','总裁') 职位  FROM emp;
+组函数及分组统计  1、COUNT():求出全部记录数 2、MAX()：求出一组中最大值 3、MIN():求出最小值 4、AVG()：求出平均值 5、SUM()：求和 
+ CONSTRAINT person_book_pid_fk FOREIGN KEY(pid) REFERENCES person(pid) 
+ CONSTRAINT person_pid_pk PRIMARY KEY(pid),  CONSTRAINT person_name_uk UNIQUE(name),   CONSTRAINT person_sex_ck CHECK(sex IN('M','F'))----------ALTER TABLE 表名称 ADD+...
+
+查找所有含有 id 属性的 div 元素 ---$("div[id]")
+2016/1/15
+Logger logger = LoggerFactory.getLogger(com.Book.class);
+       logger.debug("日志信息");
+递归查询：
+select * from emp start with empno=7698 connect by  mgr（父节点）=prior empno（子节点）;
+迭代MAP
+  Iterator i = Map.entrySet().iterator(); 
+
+
+
+  2016/1/18
+  -------------创建名为GetUserAccount的存储过程----------------
+有输入参数和输出参数的存储过程 
+create Procedure GetUserAccountRe
+@UserName nchar(20),
+@UserID int output
+as
+if(@UserName>5)
+select @UserID=COUNT(*) from UserAccount where UserID>25
+else
+set @UserID=1000
+go
+
+-------------执行上面的存储过程----------------
+exec GetUserAccountRe '7',null
+
+
+2016/1/19
+create or replace view V_ASSET_INFO as
+select rownum  as id,--id
+o.code as ORGCODE,--单位代码
+o.name as ORGNAME, --单位名称
+a.zcdz as ADDRESS, --详细地址
+a.code as ASSETCODE, --资产编码
+a.zcmc as ASSETNAME,--资产名称
+u.unit as UNITCODE, --单元号
+u.szcs as UNIT_FLOOR, --所在楼层
+u.lx as UNIT_TYPE, --类型
+h.jzmj as CONSTRUCTIONAREA, --资产的建筑面积
+h.symj as ACTUALAREA,-- 资产的实用面积
+u.jzmj as UNIT_CONSTRUCTIONAREA,--单元的建筑面积
+u.symj as UNIT_ACTUALAREA --单元实用面积
+ from asset_basic_info a left join asset_unit u on a.id = u.code left join om_organization o on a.cqgsdw = o.id 
+ left join asset_house_cert h on a.fczbh = h.id;
+
+1：首先，<interceptor>元素用来定义一个拦截器，这里仅仅是一个定义，还没有任何一个Action来引用它。
+里面的name属性作为唯一标志，而class属性就是这个拦截器的实现类。
+拦截器的实现类都应该是com.opensymphony.xwork2.interceptor.Interceptor这个接口的实现类。
+2：其次，<interceptor-stack>定义了一个拦截器栈，这个栈中可以引用其他已经定义好的拦截器。拦截器栈简化了动作类Action在引用拦截器时的操作。
+因为大多数动作类Action在引用拦截器的时候都不会仅仅引用一个拦截器，而是引用一组拦截器，而多个动作类Action大概又会引用同一组拦截器，
+这时候，为了引用的方便，可以把多个拦截器组合成一个拦截器栈。Action在引用的时候，只需要引用这个拦截器栈就可以了，而不是引用每一个拦截器。
+
+2016/1/20
+ApplicationContext的子类主要包含两个方面：
+ConfigurableApplicationContext表示该Context是可修改的，也就是在构建Context中用户可以动态添加或修改已有的配置信息，它下面又有多个子类，
+其中最经常使用的是可更新的Context，即 AbstractRefreshableApplicationContext类。
+WebApplicationContext顾名思义，就是为web准备的Context他可以直接访问到ServletContext，通常情况下，这个接口使用的少。
+总体来说ApplicationContext必须要完成以下几件事：
+◆标识一个应用环境
+◆利用BeanFactory创建Bean对象
+◆保存对象关系表
+◆能够捕获各种事件
+oc容器实际上就是Context组件结合其他两个组件共同构建了一个Bean关系网，如何构建这个关系网？构建的入口就在AbstractApplicationContext类的refresh方法中。
+
+2016/1/21
+	var print = function (i){ alert (i);};
+	[1,2,3].forEach (print);
+	<span id="ssje_span_${st.index}">
+
+2016/2/1
+"0 0 12 * * ?" 每天中午12点触发
+"0 15 10 ? * *" 每天上午10:15触发
+"0 15 10 * * ?" 每天上午10:15触发
+"0 15 10 * * ? *" 每天上午10:15触发
+"0 15 10 * * ? 2005" 2005年的每天上午10:15触发
+"0 * 14 * * ?" 在每天下午2点到下午2:59期间的每1分钟触发
+"0 0/5 14 * * ?" 在每天下午2点到下午2:55期间的每5分钟触发
+"0 0/5 14,18 * * ?" 在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发
+"0 0-5 14 * * ?" 在每天下午2点到下午2:05期间的每1分钟触发
+"0 10,44 14 ? 3 WED" 每年三月的星期三的下午2:10和2:44触发
+"0 15 10 ? * MON-FRI" 周一至周五的上午10:15触发
+"0 15 10 15 * ?" 每月15日上午10:15触发
+"0 15 10 L * ?" 每月最后一日的上午10:15触发
+"0 15 10 ? * 6L" 每月的最后一个星期五上午10:15触发 
+"0 15 10 ? * 6L 2002-2005" 2002年至2005年的每月的最后一个星期五上午10:15触发
+"0 15 10 ? * 6#3" 每月的第三个星期五上午10:15触发
